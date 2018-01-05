@@ -1,0 +1,16 @@
+Array
+(
+    [data] => DateTime Object
+        (
+            [date] => 2018-01-04 00:00:00.000000
+            [timezone_type] => 3
+            [timezone] => Europe/Berlin
+        )
+
+    [kwota] => 9999999
+    [przychWyd] => Wydatek
+    [kategoria] => Jedzenie
+    [grupa] => Jedzenie dom
+    [imie] => Grażyna
+    [sklep] => Biedronka
+)

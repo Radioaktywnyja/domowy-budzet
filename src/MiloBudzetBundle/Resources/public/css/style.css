@@ -1,0 +1,29 @@
+body {
+   font-family: "Arial","Verdana","Century Gothic",sans-serif;
+   font-size:12px;
+   background-color: #ffffff;
+}
+
+.widget {
+    margin-bottom: 20px;
+}
+
+.title {
+    margin-bottom: 10px;
+}
+
+.title span {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+table, thead {
+    border: 2px solid #000000;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000000;
+    text-align: left;
+}
+

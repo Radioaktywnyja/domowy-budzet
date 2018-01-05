@@ -1,0 +1,4 @@
+services:
+#    milo_budzet.example:
+#        class: MiloBudzetBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

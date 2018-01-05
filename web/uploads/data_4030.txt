@@ -1,0 +1,16 @@
+Array
+(
+    [data] => DateTime Object
+        (
+            [date] => 2017-04-18 00:00:00.000000
+            [timezone_type] => 3
+            [timezone] => Europe/Berlin
+        )
+
+    [kwota] => 3126
+    [przychWyd] => Wydatek
+    [kategoria] => Kieszonkowe
+    [grupa] => Brajan
+    [imie] => Sabina
+    [sklep] => Kieszonkowe
+)

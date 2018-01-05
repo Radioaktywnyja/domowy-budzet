@@ -1,0 +1,16 @@
+Array
+(
+    [data] => DateTime Object
+        (
+            [date] => 2018-01-01 00:00:00.000000
+            [timezone_type] => 3
+            [timezone] => Europe/Berlin
+        )
+
+    [kwota] => 50
+    [przychWyd] => Wydatek
+    [kategoria] => Kieszonkowe
+    [grupa] => Brajan
+    [imie] => Grażyna
+    [sklep] => Kieszonkowe
+)

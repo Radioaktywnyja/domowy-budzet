@@ -1,0 +1,7 @@
+milo_budzet_homepage:
+    path:     /
+    defaults: { _controller: MiloBudzetBundle:Default:index }
+
+milo_budzet_annotations:
+    resource: '@MiloBudzetBundle/Controller/'
+    type: annotation
