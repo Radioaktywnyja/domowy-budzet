@@ -39,21 +39,7 @@ class dodajWydatek {
      * 
      * @Assert\NotBlank
      */
-    private $przychWyd;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     * 
-     * @Assert\NotBlank
-     */
-    private $kategoria;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     * 
-     * @Assert\NotBlank
-     */
-    private $grupa;
+    private $typ;
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -68,21 +54,6 @@ class dodajWydatek {
      * @Assert\NotBlank
      */
     private $sklep;
-    
-
-    public function save($savePath) {
-        
-        $paramsNames = array('data', 'kwota', 'przychWyd', 'kategoria', 'grupa', 'imie', 'sklep'); 
-        $formData = array();
-        foreach ($paramsNames as $name) {
-            $formData[$name] = $this->{$name};
-        }
-        
-        $randVal = rand(1000, 9999);
-        $dataFileName = sprintf('data_%d.txt', $randVal);
-            
-        file_put_contents($savePath.$dataFileName, print_r($formData, TRUE));
-    }
 
     /**
      * Get id
@@ -143,75 +114,27 @@ class dodajWydatek {
     }
 
     /**
-     * Set przychWyd
+     * Set typ
      *
-     * @param string $przychWyd
+     * @param string $typ
      *
      * @return dodajWydatek
      */
-    public function setPrzychWyd($przychWyd)
+    public function setTyp($typ)
     {
-        $this->przychWyd = $przychWyd;
+        $this->typ = $typ;
 
         return $this;
     }
 
     /**
-     * Get przychWyd
+     * Get typ
      *
      * @return string
      */
-    public function getPrzychWyd()
+    public function getTyp()
     {
-        return $this->przychWyd;
-    }
-
-    /**
-     * Set kategoria
-     *
-     * @param string $kategoria
-     *
-     * @return dodajWydatek
-     */
-    public function setKategoria($kategoria)
-    {
-        $this->kategoria = $kategoria;
-
-        return $this;
-    }
-
-    /**
-     * Get kategoria
-     *
-     * @return string
-     */
-    public function getKategoria()
-    {
-        return $this->kategoria;
-    }
-
-    /**
-     * Set grupa
-     *
-     * @param string $grupa
-     *
-     * @return dodajWydatek
-     */
-    public function setGrupa($grupa)
-    {
-        $this->grupa = $grupa;
-
-        return $this;
-    }
-
-    /**
-     * Get grupa
-     *
-     * @return string
-     */
-    public function getGrupa()
-    {
-        return $this->grupa;
+        return $this->typ;
     }
 
     /**

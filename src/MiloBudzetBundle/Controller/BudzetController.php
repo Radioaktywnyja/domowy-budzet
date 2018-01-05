@@ -44,9 +44,6 @@ class BudzetController extends Controller {
         
         if($Request->isMethod('POST')) {
             if($form->isSubmitted() && $form->isValid()) {
-
-                $savePath = $this->get('kernel')->getRootDir().'/../web/uploads/';
-                $dodajWydatek->save($savePath);
                 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($dodajWydatek);

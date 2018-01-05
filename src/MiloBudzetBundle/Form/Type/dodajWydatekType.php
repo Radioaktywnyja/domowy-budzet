@@ -17,22 +17,7 @@ class dodajWydatekType extends AbstractType {
                     ->add('kwota', formType\MoneyType::class, array(
                         'currency' => 'PLN'
                     ))
-                    ->add('przychWyd', formType\ChoiceType::class, array(
-                        'choices' => array(
-                            'Przychód' => 'Przychód',
-                            'Wydatek' => 'Wydatek'
-                        ),
-                        'expanded' => true,
-                        'label' => 'Przychód/Wydatek'
-                    ))
-                    ->add('kategoria', formType\ChoiceType::class, array(
-                        'choices' => array(
-                            'Jedzenie' => 'Jedzenie',
-                            'Samochody' => 'Samochody',
-                            'Kieszonkowe' => 'Kieszonkowe',
-                        )
-                    ))
-                    ->add('grupa', formType\ChoiceType::class, array(
+                    ->add('typ', formType\ChoiceType::class, array(
                         'choices' => array(
                             'Jedzenie' => array(
                                 'Jedzenie dom' => 'Jedzenie dom',
