@@ -40,7 +40,6 @@ class dodajWydatekType extends AbstractType {
                             'Grażyna' => 'Grażyna'
                         ),
                         'expanded' => true,
-                        'label' => 'Imię'
                     ))
                     ->add('sklep', formType\ChoiceType::class, array(
                         'choices' => array(
