@@ -59,4 +59,8 @@ class dodajKatWydatku {
     {
         return $this->kategoria;
     }
+    
+    public function __toString() {
+        return $this->kategoria;
+    }
 }

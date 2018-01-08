@@ -59,4 +59,8 @@ class dodajImie {
     {
         return $this->imie;
     }
+    
+    public function __toString() {
+        return $this->imie;
+    }
 }

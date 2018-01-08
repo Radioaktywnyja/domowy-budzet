@@ -7,7 +7,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as formType;
-use MiloBudzetBundle\Entity\dodajWydatek;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use MiloBudzetBundle\Entity as Entity;
 
 class dodajWydatekType extends AbstractType {
     
@@ -17,45 +18,26 @@ class dodajWydatekType extends AbstractType {
                     ->add('kwota', formType\MoneyType::class, array(
                         'currency' => 'PLN'
                     ))
-                    ->add('typ', formType\ChoiceType::class, array(
-                        'choices' => array(
-                            'Jedzenie' => array(
-                                'Jedzenie dom' => 'Jedzenie dom',
-                                'Jedzenie praca' => 'Jedzenie praca'
-                            ),
-                            'Samochody' => array(
-                                'Paliwo Passat' => 'Paliwo Passat',
-                                'Paliwo Golf II' => 'Paliwo Golf II',
-                                'Naprawy' => 'Naprawy'
-                            ),
-                            'Kieszonkowe' => array(
-                                'Brajan' => 'Brajan',
-                                'Dżesika' => 'Dżesika'
-                            )
-                        )
+                    ->add('typ', EntityType::class, array(
+                        'class' => Entity\dodajTypWydatku::class,
+                        'choice_label' => 'grupa',
+                        'group_by' => 'kategoria'
                     ))
-                    ->add('imie', formType\ChoiceType::class, array(
-                        'choices' => array(
-                            'Janusz' => 'Janusz',
-                            'Grażyna' => 'Grażyna'
-                        ),
+                    ->add('imie', EntityType::class, array(
+                        'class' => Entity\dodajImie::class,
+                        'choice_label' => 'imie',
                         'expanded' => true,
                     ))
-                    ->add('sklep', formType\ChoiceType::class, array(
-                        'choices' => array(
-                            'Biedronka' => 'Biedronka',
-                            'Lidl' => 'Lidl',
-                            'BP' => 'BP',
-                            'Orlen' => 'Orlen',
-                            'Kieszonkowe' => 'Kieszonkowe',
-                        )
+                    ->add('sklep', EntityType::class, array(
+                        'class' => Entity\dodajSklep::class,
+                        'choice_label' => 'sklep'
                     ))
                     ->add('Zapisz', formType\SubmitType::class);
     }
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-           'data_class' => dodajWydatek::class
+           'data_class' => Entity\dodajWydatek::class
         ));
     }
     

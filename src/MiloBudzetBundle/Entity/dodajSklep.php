@@ -59,4 +59,8 @@ class dodajSklep {
     {
         return $this->sklep;
     }
+    
+    public function __toString() {
+        return $this->sklep;
+    }
 }
