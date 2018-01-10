@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="wydatki")
+ * @ORM\Table(name="przychody")
  */
-class dodajWydatek {
+class dodajPrzychod {
     
     /**
      * @ORM\Column(type="integer")
@@ -35,7 +35,7 @@ class dodajWydatek {
     private $kwota;
     
      /**
-     * @ORM\ManyToOne(targetEntity="dodajTypWydatku", inversedBy="typy")
+     * @ORM\ManyToOne(targetEntity="dodajTypPrzychodu", inversedBy="typy")
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajTypy;
@@ -45,12 +45,6 @@ class dodajWydatek {
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajImiona;
-    
-      /**
-     * @ORM\ManyToOne(targetEntity="dodajSklep", inversedBy="sklepy")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $dodajSklepy;
 
     /**
      * Get id
@@ -67,7 +61,7 @@ class dodajWydatek {
      *
      * @param \DateTime $data
      *
-     * @return dodajWydatek
+     * @return dodajPrzychod
      */
     public function setData($data)
     {
@@ -91,7 +85,7 @@ class dodajWydatek {
      *
      * @param string $kwota
      *
-     * @return dodajWydatek
+     * @return dodajPrzychod
      */
     public function setKwota($kwota)
     {
@@ -113,11 +107,11 @@ class dodajWydatek {
     /**
      * Set dodajTypy
      *
-     * @param \MiloBudzetBundle\Entity\dodajTypWydatku $dodajTypy
+     * @param \MiloBudzetBundle\Entity\dodajTypPrzychodu $dodajTypy
      *
-     * @return dodajWydatek
+     * @return dodajPrzychod
      */
-    public function setDodajTypy(\MiloBudzetBundle\Entity\dodajTypWydatku $dodajTypy)
+    public function setDodajTypy(\MiloBudzetBundle\Entity\dodajTypPrzychodu $dodajTypy)
     {
         $this->dodajTypy = $dodajTypy;
 
@@ -127,7 +121,7 @@ class dodajWydatek {
     /**
      * Get dodajTypy
      *
-     * @return \MiloBudzetBundle\Entity\dodajTypWydatku
+     * @return \MiloBudzetBundle\Entity\dodajTypPrzychodu
      */
     public function getDodajTypy()
     {
@@ -139,7 +133,7 @@ class dodajWydatek {
      *
      * @param \MiloBudzetBundle\Entity\dodajImie $dodajImiona
      *
-     * @return dodajWydatek
+     * @return dodajPrzychod
      */
     public function setDodajImiona(\MiloBudzetBundle\Entity\dodajImie $dodajImiona)
     {
@@ -156,29 +150,5 @@ class dodajWydatek {
     public function getDodajImiona()
     {
         return $this->dodajImiona;
-    }
-
-    /**
-     * Set dodajSklepy
-     *
-     * @param \MiloBudzetBundle\Entity\dodajSklep $dodajSklepy
-     *
-     * @return dodajWydatek
-     */
-    public function setDodajSklepy(\MiloBudzetBundle\Entity\dodajSklep $dodajSklepy)
-    {
-        $this->dodajSklepy = $dodajSklepy;
-
-        return $this;
-    }
-
-    /**
-     * Get dodajSklepy
-     *
-     * @return \MiloBudzetBundle\Entity\dodajSklep
-     */
-    public function getDodajSklepy()
-    {
-        return $this->dodajSklepy;
     }
 }

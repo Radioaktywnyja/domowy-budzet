@@ -31,6 +31,11 @@ class dodajTypWydatku {
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajKategorie;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="dodajWydatek", mappedBy="dodajTypy")
+     */
+    private $typy;
 
     /**
      * Get id
@@ -88,5 +93,46 @@ class dodajTypWydatku {
     public function getDodajKategorie()
     {
         return $this->dodajKategorie;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->typy = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add typy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $typy
+     *
+     * @return dodajTypWydatku
+     */
+    public function addTypy(\MiloBudzetBundle\Entity\dodajWydatek $typy)
+    {
+        $this->typy[] = $typy;
+
+        return $this;
+    }
+
+    /**
+     * Remove typy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $typy
+     */
+    public function removeTypy(\MiloBudzetBundle\Entity\dodajWydatek $typy)
+    {
+        $this->typy->removeElement($typy);
+    }
+
+    /**
+     * Get typy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypy()
+    {
+        return $this->typy;
     }
 }

@@ -20,13 +20,7 @@ class BudzetController extends Controller {
      * @Template
      */
     public function indexAction() {
-        
-        $Repo = $this->getDoctrine()->getRepository('MiloBudzetBundle:dodajTypWydatku');
-        $rows = $Repo->findAll();
-        
-        return array(
-            'rows' => $rows
-        );
+        return array();
     }
     
     /**
@@ -227,6 +221,85 @@ class BudzetController extends Controller {
             'form' => $form->createView()
         );
         
+    }
+    
+    /**
+     * @Route(
+     *      "/dodajPrzychod",
+     *      name="milo_budzet_dodajPrzychod"
+     * )
+     * 
+     * @Template
+     */    
+    public function dodajPrzychodAction(Request $Request) {
+        
+        $dodajPrzychod = new Entity\dodajPrzychod();
+        $dodajPrzychod->setData(new \DateTime());
+        
+        $form = $this->createForm(Type\dodajPrzychodType::class, $dodajPrzychod);
+        
+        $form->handleRequest($Request);
+        
+        $Session = $this->get('session');
+        
+        if($Request->isMethod('POST')) {
+            if($form->isSubmitted() && $form->isValid()) {
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($dodajPrzychod);
+                $em->flush();
+
+                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
+
+                return $this->redirect($this->generateUrl('milo_budzet_dodajPrzychod'));
+
+            }else{
+                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
+            }
+        }
+        
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+    
+    /**
+     * @Route(
+     *      "/dodajTypPrzychodu",
+     *      name="milo_budzet_dodajTypPrzychodu"
+     * )
+     * 
+     * @Template
+     */
+    public function dodajTypPrzychodu(Request $Request) {
+        
+        $dodajTypPrzychodu = new Entity\dodajTypPrzychodu();
+        
+        $form = $this->createForm(Type\dodajTypPrzychoduType::class, $dodajTypPrzychodu);
+        
+        $form->handleRequest($Request);
+        
+        $Session = $this->get('session');
+        
+        if($Request->isMethod('POST')) {
+            if($form->isSubmitted() && $form->isValid()){
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($dodajTypPrzychodu);
+                $em->flush();
+                
+                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
+                
+                return $this->redirect($this->generateUrl('milo_budzet_dodajTypPrzychodu'));
+                
+            } else {
+                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
+            }
+        }
+        
+        return array(
+            'form' => $form->createView(),
+        );
     }
     
 }

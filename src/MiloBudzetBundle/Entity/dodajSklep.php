@@ -25,6 +25,11 @@ class dodajSklep {
      */
     private $sklep;
     
+     /**
+     * @ORM\OneToMany(targetEntity="dodajWydatek", mappedBy="dodajSklepy")
+     */
+    private $sklepy;
+    
 
     /**
      * Get id
@@ -62,5 +67,46 @@ class dodajSklep {
     
     public function __toString() {
         return $this->sklep;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->sklepy = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add sklepy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $sklepy
+     *
+     * @return dodajSklep
+     */
+    public function addSklepy(\MiloBudzetBundle\Entity\dodajWydatek $sklepy)
+    {
+        $this->sklepy[] = $sklepy;
+
+        return $this;
+    }
+
+    /**
+     * Remove sklepy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $sklepy
+     */
+    public function removeSklepy(\MiloBudzetBundle\Entity\dodajWydatek $sklepy)
+    {
+        $this->sklepy->removeElement($sklepy);
+    }
+
+    /**
+     * Get sklepy
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSklepy()
+    {
+        return $this->sklepy;
     }
 }

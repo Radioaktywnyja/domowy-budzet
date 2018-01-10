@@ -25,6 +25,12 @@ class dodajImie {
      */
     private $imie;
     
+     /**
+     * @ORM\OneToMany(targetEntity="dodajWydatek", mappedBy="dodajImiona")
+     * @ORM\OneToMany(targetEntity="dodajPrzychod", mappedBy="dodajImiona")
+     */
+    private $imiona;
+    
 
     /**
      * Get id
@@ -62,5 +68,46 @@ class dodajImie {
     
     public function __toString() {
         return $this->imie;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->imiona = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add imiona
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $imiona
+     *
+     * @return dodajImie
+     */
+    public function addImiona(\MiloBudzetBundle\Entity\dodajWydatek $imiona)
+    {
+        $this->imiona[] = $imiona;
+
+        return $this;
+    }
+
+    /**
+     * Remove imiona
+     *
+     * @param \MiloBudzetBundle\Entity\dodajWydatek $imiona
+     */
+    public function removeImiona(\MiloBudzetBundle\Entity\dodajWydatek $imiona)
+    {
+        $this->imiona->removeElement($imiona);
+    }
+
+    /**
+     * Get imiona
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImiona()
+    {
+        return $this->imiona;
     }
 }
