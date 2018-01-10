@@ -4,6 +4,7 @@ namespace MiloBudzetBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -24,6 +25,11 @@ class dodajKatWydatku {
      * @Assert\NotBlank
      */
     private $kategoria;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="dodajTypWydatku", mappedBy="dodajKategorie")
+     */
+    private $grupy;
     
 
     /**
@@ -60,7 +66,40 @@ class dodajKatWydatku {
         return $this->kategoria;
     }
     
+    
     public function __toString() {
         return $this->kategoria;
+    }
+    
+    public function __construct() {
+        $this->grupy = new ArrayCollection();
+    }
+    
+    public function getGrupy() {
+        return $this->grupy;
+    }
+
+    /**
+     * Add grupy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajTypWydatku $grupy
+     *
+     * @return dodajKatWydatku
+     */
+    public function addGrupy(\MiloBudzetBundle\Entity\dodajTypWydatku $grupy)
+    {
+        $this->grupy[] = $grupy;
+
+        return $this;
+    }
+
+    /**
+     * Remove grupy
+     *
+     * @param \MiloBudzetBundle\Entity\dodajTypWydatku $grupy
+     */
+    public function removeGrupy(\MiloBudzetBundle\Entity\dodajTypWydatku $grupy)
+    {
+        $this->grupy->removeElement($grupy);
     }
 }

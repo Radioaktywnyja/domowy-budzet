@@ -107,6 +107,13 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            {% for entry in rows %}
+                {{ entry.id }}
+                {{ entry.grupa }}
+                {{ entry.dodajKategorie }}
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

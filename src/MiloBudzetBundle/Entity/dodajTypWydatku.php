@@ -4,6 +4,7 @@ namespace MiloBudzetBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use MiloBudzetBundle\Entity\dodajKatWydatku;
 
 /**
  * @ORM\Entity
@@ -23,15 +24,13 @@ class dodajTypWydatku {
      * 
      * @Assert\NotBlank
      */
-    private $kategoria;
-    
-    /**
-     * @ORM\Column(type="string", length=255)
-     * 
-     * @Assert\NotBlank
-     */
     private $grupa;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="dodajKatWydatku", inversedBy="grupy")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $dodajKategorie;
 
     /**
      * Get id
@@ -41,30 +40,6 @@ class dodajTypWydatku {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set kategoria
-     *
-     * @param string $kategoria
-     *
-     * @return dodajTypWydatku
-     */
-    public function setKategoria($kategoria)
-    {
-        $this->kategoria = $kategoria;
-
-        return $this;
-    }
-
-    /**
-     * Get kategoria
-     *
-     * @return string
-     */
-    public function getKategoria()
-    {
-        return $this->kategoria;
     }
 
     /**
@@ -89,5 +64,29 @@ class dodajTypWydatku {
     public function getGrupa()
     {
         return $this->grupa;
+    }
+
+    /**
+     * Set dodajKategorie
+     *
+     * @param dodajKatWydatku $dodajKategorie
+     *
+     * @return dodajTypWydatku
+     */
+    public function setDodajKategorie(dodajKatWydatku $dodajKategorie)
+    {
+        $this->dodajKategorie = $dodajKategorie;
+
+        return $this;
+    }
+
+    /**
+     * Get dodajKategorie
+     *
+     * @return dodajKatWydatku
+     */
+    public function getDodajKategorie()
+    {
+        return $this->dodajKategorie;
     }
 }

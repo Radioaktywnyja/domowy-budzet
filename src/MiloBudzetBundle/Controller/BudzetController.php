@@ -20,7 +20,13 @@ class BudzetController extends Controller {
      * @Template
      */
     public function indexAction() {
-        return array();
+        
+        $Repo = $this->getDoctrine()->getRepository('MiloBudzetBundle:dodajTypWydatku');
+        $rows = $Repo->findAll();
+        
+        return array(
+            'rows' => $rows
+        );
     }
     
     /**

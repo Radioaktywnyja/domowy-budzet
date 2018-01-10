@@ -16,7 +16,7 @@ class dodajTypWydatkuType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         
         $builder 
-                ->add('kategoria', EntityType::class, array(
+                ->add('dodajKategorie', EntityType::class, array(
                     'class' => dodajKatWydatku::class,
                     'choice_label' => 'kategoria'
                 ))
