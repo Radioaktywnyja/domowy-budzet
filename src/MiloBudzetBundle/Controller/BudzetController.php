@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use MiloBudzetBundle\Form\Type as Type;
+use MiloBudzetBundle\Controller\BudzetController;
 use MiloBudzetBundle\Entity as Entity;
 
 /**
@@ -15,290 +15,129 @@ use MiloBudzetBundle\Entity as Entity;
 class BudzetController extends Controller {
 
     /**
-     * @Route("/")
-     * 
-     * @Template
-     */
-    public function indexAction() {
-        return array();
-    }
-    
-    /**
      * @Route(
-     *      "/dodajWydatek",
-     *      name="milo_budzet_dodajWydatek"
-     * )
-     * 
-     * @Template
-     */    
-    public function dodajWydatekAction(Request $Request) {
-        
-        $dodajWydatek = new Entity\dodajWydatek();
-        $dodajWydatek->setData(new \DateTime());
-        
-        $form = $this->createForm(Type\dodajWydatekType::class, $dodajWydatek);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()) {
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajWydatek);
-                $em->flush();
-
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-
-                return $this->redirect($this->generateUrl('milo_budzet_dodajWydatek'));
-
-            }else{
-                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
-            }
-        }
-        
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-    
-    /**
-     * @Route(
-     *      "/dodajTypWydatku",
-     *      name="milo_budzet_dodajTypWydatku"
+     *      "/{okres}",
+     *      defaults={"okres"="today"}
      * )
      * 
      * @Template
      */
-    public function dodajTypWydatku(Request $Request) {
+    public function indexAction($okres) {
         
-        $dodajTypWydatku = new Entity\dodajTypWydatku();
-        
-        $form = $this->createForm(Type\dodajTypWydatkuType::class, $dodajTypWydatku);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()){
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajTypWydatku);
-                $em->flush();
-                
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-                
-                return $this->redirect($this->generateUrl('milo_budzet_dodajTypWydatku'));
-                
-            } else {
-                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
-            }
-        }
-        
-        return array(
-            'form' => $form->createView(),
-        );
-    }
-    
-    
-    /**
-     * @Route(
-     *      "/dodajKatWydatku",
-     *      name="milo_budzet_dodajKatWydatku"
-     * )
-     * 
-     * @Template
-     */
-    public function dodajKatWydatku(Request $Request) {
-        
-        $dodajKatWydatku = new Entity\dodajKatWydatku();
-        
-        $form = $this->createForm(Type\dodajKatWydatkuType::class, $dodajKatWydatku);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')){
-            if($form->isSubmitted() && $form->isValid()) {
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajKatWydatku);
-                $em->flush();
-                
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-                
-                return $this->redirect($this->generateUrl('milo_budzet_dodajKatWydatku'));
-                
-            } else {
-                $Session->getFlashBag()->add('danger', 'Popraw dane formularza');
-            }
-        }
-        
-        return array(
-            'form' => $form->createView()
-        );
-        
-    }
-    
-    /**
-     * @Route(
-     *      "/dodajImie",
-     *      name="milo_budzet_dodajImie"
-     * )
-     * 
-     * @Template
-     */
-    public function dodajImie(Request $Request) {
-        
-        $dodajImie = new Entity\dodajImie();
-        
-        $form = $this->createForm(Type\dodajImieType::class, $dodajImie);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()) {
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajImie);
-                $em->flush();
-                
-                $Session->getFlashBag()->add('success', "Zgłoszenie zostało zapisane");
-                
-                return $this->redirect($this->generateUrl('milo_budzet_dodajImie'));
-                
-            } else {
-                $Session->getFlashBag()->add('danger', 'Popraw dane formularza');
-            }
-        }
-        
-        return array(
-            'form' => $form->createView()
-        );
-        
-    }
-    
-    /**
-     * @Route(
-     *      "/dodajSklep",
-     *      name="milo_budzet_dodajSklep"
-     * )
-     * 
-     * @Template
-     */
-    public function dodajSklep(Request $Request) {
-        
-        $dodajSklep = new Entity\dodajSklep();
-        
-        $form = $this->createForm(Type\dodajSklepType::class, $dodajSklep);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()) {
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajSklep);
-                $em->flush();
-                
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-                
-                return $this->redirect($this->generateUrl('milo_budzet_dodajSklep'));
-                
-            } else {
-                $Session->getFlashBag()->add('danger', 'Popraw dane formularza');
-            }
-        }
-        
-        return array(
-            'form' => $form->createView()
-        );
-        
-    }
-    
-    /**
-     * @Route(
-     *      "/dodajPrzychod",
-     *      name="milo_budzet_dodajPrzychod"
-     * )
-     * 
-     * @Template
-     */    
-    public function dodajPrzychodAction(Request $Request) {
-        
-        $dodajPrzychod = new Entity\dodajPrzychod();
-        $dodajPrzychod->setData(new \DateTime());
-        
-        $form = $this->createForm(Type\dodajPrzychodType::class, $dodajPrzychod);
-        
-        $form->handleRequest($Request);
-        
-        $Session = $this->get('session');
-        
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()) {
-                
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajPrzychod);
-                $em->flush();
+        $tabelaSumWydatkow = $this->wyswietlSumeWydatkowAction($okres);
+        $tabelaSumPrzychodow = $this->wyswietlSumePrzychodowAction($okres);
 
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-
-                return $this->redirect($this->generateUrl('milo_budzet_dodajPrzychod'));
-
-            }else{
-                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
-            }
-        }
-        
         return array(
-            'form' => $form->createView(),
+            'data' => $tabelaSumWydatkow['data'],
+            'wydatki_sumy' => $tabelaSumWydatkow['wydatki_sumy'],
+            'sumaWydatkow' => $tabelaSumWydatkow['sumaWydatkow'],
+            'przychody_sumy' => $tabelaSumPrzychodow['przychody_sumy']
+        );
+    }
+        
+        
+    public function wyswietlSumeWydatkowAction($okres) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajWydatek');
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');
+        $repoKat = $em->getRepository('MiloBudzetBundle:dodajKatWydatku');
+        
+        $data = new \DateTime($okres);        
+        $kategorie = $repoKat->findAllkategorie();
+        $sumaWydatkow = 0;
+        
+        foreach($kategorie as $k => $category){
+            $typy = $repoTyp->findByDodajKategorie($category['id']);
+            foreach($typy as $t => $type) {;
+                $kwoty = $repoKwota->findBydodajTypyAndSum($type['id'], $data);
+                $wydatki_sumy[$category['kategoria']][$type['grupa']] = $kwoty[0][1];
+            }
+            $wydatki_sumy[$category['kategoria']]['Suma'] = sprintf('%0.2f', array_sum($wydatki_sumy[$category['kategoria']]));
+            $sumaWydatkow = $sumaWydatkow + $wydatki_sumy[$category['kategoria']]['Suma'];
+        }
+                
+        return array(
+            'data' => $data,
+            'wydatki_sumy' => $wydatki_sumy,
+            'sumaWydatkow' => sprintf('%0.2f', $sumaWydatkow)
         );
     }
     
-    /**
-     * @Route(
-     *      "/dodajTypPrzychodu",
-     *      name="milo_budzet_dodajTypPrzychodu"
-     * )
-     * 
-     * @Template
-     */
-    public function dodajTypPrzychodu(Request $Request) {
+     public function wyswietlWydatkiAction($okres) {
         
-        $dodajTypPrzychodu = new Entity\dodajTypPrzychodu();
+        $em = $this->getDoctrine()->getManager();
         
-        $form = $this->createForm(Type\dodajTypPrzychoduType::class, $dodajTypPrzychodu);
+        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajWydatek');
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');
+        $repoKat = $em->getRepository('MiloBudzetBundle:dodajKatWydatku');
         
-        $form->handleRequest($Request);
+        $data = new \DateTime($okres);        
+        $kategorie = $repoKat->findAllkategorie();
         
-        $Session = $this->get('session');
+        foreach($kategorie as $k => $category){
+            $typy = $repoTyp->findByDodajKategorie($category['id']);
+            foreach($typy as $t => $type) {
+                $wydatki[$category['kategoria']][] = $type['grupa'];
+                $kwoty = $repoKwota->findBydodajTypy($type['id'], $data);
+                foreach($kwoty as $k => $amount){
+                    $wydatki[$category['kategoria']][$type['grupa']][] = $amount['kwota'];
+                }
+            }
+        }
+           
+        return array(
+            'data' => $data,
+            'wydatki' => $wydatki,
+        );
+    }
+    
+    public function wyswietlSumePrzychodowAction($okres) {
         
-        if($Request->isMethod('POST')) {
-            if($form->isSubmitted() && $form->isValid()){
+        $em = $this->getDoctrine()->getManager();
+        
+        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajPrzychod');
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypPrzychodu');
+        
+        $data = new \DateTime($okres);        
+        $typy = $repoTyp->findAlltypPrzychodu();
+        $sumaPrzychodow = 0;
+        
+        foreach($typy as $t => $type){
+            $kwoty = $repoKwota->findBydodajTypyAndSum($type['id'], $data);
+            $przychody_sumy[$type['grupa']] = $kwoty[0][1];
+        }
+        
+        $przychody_sumy['Suma'] = sprintf('%0.2f', array_sum($przychody_sumy));
                 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dodajTypPrzychodu);
-                $em->flush();
-                
-                $Session->getFlashBag()->add('success', 'Zgłoszenie zostało zapisane');
-                
-                return $this->redirect($this->generateUrl('milo_budzet_dodajTypPrzychodu'));
-                
-            } else {
-                $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
+        return array(
+            'data' => $data,
+            'przychody_sumy' => $przychody_sumy,
+        );
+    }
+    
+    public function wyswietlPrzychodyAction($okres) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajPrzychod');
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypPrzychodu');
+        
+        $data = new \DateTime($okres);        
+        $typy = $repoTyp->findAlltypPrzychodu();
+        
+        foreach($typy as $t => $type){
+            $kwoty = $repoKwota->findBydodajTypy($type['id'], $data);
+            foreach($kwoty as $k => $amount){
+                $przychody[$type['grupa']][] = $amount['kwota'];
             }
         }
         
+                
         return array(
-            'form' => $form->createView(),
+            'data' => $data,
+            'przychody' => $przychody
         );
     }
     

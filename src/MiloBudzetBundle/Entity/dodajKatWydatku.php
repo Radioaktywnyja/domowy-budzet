@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MiloBudzetBundle\Repository\dodajKatWydatkuRepository")
  * @ORM\Table(name="katWydatku")
  */
 class dodajKatWydatku {

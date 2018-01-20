@@ -13,16 +13,16 @@
         </div>
         <div class="widget miesiac-suma">
             <div class="title">
-                <span>Listopad</span>
+                <span>Miesiąc: {{ data|date('m/Y') }}</span>
                 <button>Zmień</button>
             </div>
-            <h4>Przychody: 4040,00 zł</h4>
-            <h4>Wydatki: 3350,00 zł</h4>
+            <h4>Przychody: {{ przychody_sumy.Suma }} zł</h4>
+            <h4>Wydatki: {{ sumaWydatkow }} zł</h4>
         </div>
         <div class="widget przychody-ogol">
             <div class="title">
                 <span>Przychody</span>
-                <button>Dodaj nowy</button>
+                <a href="{{ path('milo_budzet_forms_dodajPrzychod') }}"><button>Dodaj nowy</button></a>
             </div>
             <table class="przychody-tabela">
                 <thead>
@@ -34,27 +34,21 @@
                 <tbody>
                     <tr>
                         <th>Przychody</th>
-                        <th>4040,00 zł</th>
+                        <th>{{ przychody_sumy.Suma }} zł</th>
                     </tr>
-                    <tr>
-                        <td>Pensja Janusz</td>
-                        <td>2000,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Pensja Grażyna</td>
-                        <td>1540,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Pińcet plus</td>
-                        <td>500,00 zł</td>
-                    </tr>
+                   {% for nazwa, suma in przychody_sumy if nazwa != 'Suma' %}
+                        <tr>
+                            <td>{{ nazwa }}</td>
+                            <td>{{ suma }} zł</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
         <div class="widget wydatki-ogol">
             <div class="title">
                 <span>Wydatki</span>
-                <button>Dodaj nowy</button>
+                <a href="{{ path('milo_budzet_forms_dodajWydatek') }}"><button>Dodaj nowy</button></a>
             </div>
             <table>
                 <thead>
@@ -64,46 +58,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for kategoria, grupy in wydatki_sumy %}
                     <tr>
-                        <th>Jedzenie</th>
-                        <th>2000,00 zł</th>
+                        <th>{{ kategoria }}</th>
+                        <th>{{ grupy.Suma }} zł</th>
                     </tr>
-                    <tr>
-                        <td>Jedzenie dom</td>
-                        <td>1500,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Jedzenie praca</td>
-                        <td>500,00 zł</td>
-                    </tr>
-                    <tr>
-                        <th>Samochody</th>
-                        <th>350,00 zł</th>
-                    </tr>
-                    <tr>
-                        <td>Paliwo Passat</td>
-                        <td>100,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Paliwo Golf II</td>
-                        <td>20,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Naprawy</td>
-                        <td>230,00 zł</td>
-                    </tr>
-                     <tr>
-                        <th>Kieszonkowe</th>
-                        <th>1000,00 zł</th>
-                    </tr>
-                    <tr>
-                        <td>Brajan</td>
-                        <td>500,00 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Dżesika</td>
-                        <td>500,00 zł</td>
-                    </tr>
+                        {% for nazwa, suma in grupy if nazwa != 'Suma' %}
+                        <tr>
+                            <td>{{ nazwa }}</td>
+                            <td>{{ suma }} zł</td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

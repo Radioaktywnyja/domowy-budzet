@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MiloBudzetBundle\Repository\dodajPrzychodRepository")
  * @ORM\Table(name="przychody")
  */
 class dodajPrzychod {

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use MiloBudzetBundle\Entity\dodajKatWydatku;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="MiloBudzetBundle\Repository\dodajTypWydatkuRepository")
  * @ORM\Table(name="typWydatku")
  */
 class dodajTypWydatku {
