@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type as formType;
 use MiloBudzetBundle\Form\Type as Type;
 use MiloBudzetBundle\Entity as Entity;
 
@@ -62,7 +63,7 @@ class BudzetFormsController extends Controller {
      * 
      * @Template
      */
-    public function dodajTypWydatku(Request $Request) {
+    public function dodajTypWydatkuAction(Request $Request) {
         
         $dodajTypWydatku = new Entity\dodajTypWydatku();
         
@@ -102,7 +103,7 @@ class BudzetFormsController extends Controller {
      * 
      * @Template
      */
-    public function dodajKatWydatku(Request $Request) {
+    public function dodajKatWydatkuAction(Request $Request) {
         
         $dodajKatWydatku = new Entity\dodajKatWydatku();
         
@@ -142,7 +143,7 @@ class BudzetFormsController extends Controller {
      * 
      * @Template
      */
-    public function dodajImie(Request $Request) {
+    public function dodajImieAction(Request $Request) {
         
         $dodajImie = new Entity\dodajImie();
         
@@ -182,7 +183,7 @@ class BudzetFormsController extends Controller {
      * 
      * @Template
      */
-    public function dodajSklep(Request $Request) {
+    public function dodajSklepAction(Request $Request) {
         
         $dodajSklep = new Entity\dodajSklep();
         
@@ -262,7 +263,7 @@ class BudzetFormsController extends Controller {
      * 
      * @Template
      */
-    public function dodajTypPrzychodu(Request $Request) {
+    public function dodajTypPrzychoduAction(Request $Request) {
         
         $dodajTypPrzychodu = new Entity\dodajTypPrzychodu();
         
@@ -285,6 +286,43 @@ class BudzetFormsController extends Controller {
                 
             } else {
                 $Session->getFlashBag()->add('danger', 'Popraw błędy formularza');
+            }
+        }
+        
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+    
+    /**
+     * @Route(
+     *      "/zmienMiesiac",
+     *      name="milo_budzet_forms_zmienMiesiac"
+     * )
+     * 
+     * @Template
+     */
+    public function zmienMiesiacAction(Request $Request) {
+        
+        $form = $this->createFormBuilder()
+                ->add('miesiac', formType\DateType::class, array(
+                    'data' => new \DateTime('first day of this month')
+                ))
+                ->add('Ustaw', formType\SubmitType::class)
+                ->getForm();
+        
+        $form->handleRequest($Request);
+        
+        if($Request->isMethod('POST')) {
+            if($form->isSubmitted() && $form->isValid()){
+                
+                $formData = $form->getData();
+                $formData = $formData['miesiac']->format('Y-m');
+                
+                return $this->redirect($this->generateUrl('milo_budzet_index', array(
+                    'okres' => $formData
+                )));
+                
             }
         }
         

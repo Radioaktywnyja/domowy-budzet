@@ -14,7 +14,7 @@
         <div class="widget miesiac-suma">
             <div class="title">
                 <span>Miesiąc: {{ data|date('m/Y') }}</span>
-                <button>Zmień</button>
+                <a href="{{ path('milo_budzet_forms_zmienMiesiac') }}"><button>Zmień</button></a>
             </div>
             <h4>Przychody: {{ przychody_sumy.Suma }} zł</h4>
             <h4>Wydatki: {{ sumaWydatkow }} zł</h4>

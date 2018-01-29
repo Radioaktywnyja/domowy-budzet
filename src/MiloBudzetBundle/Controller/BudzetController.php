@@ -17,7 +17,8 @@ class BudzetController extends Controller {
     /**
      * @Route(
      *      "/{okres}",
-     *      defaults={"okres"="today"}
+     *      defaults={"okres"="today"},
+     *      name="milo_budzet_index"
      * )
      * 
      * @Template
