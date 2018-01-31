@@ -24,54 +24,110 @@
                 <span>Przychody</span>
                 <a href="{{ path('milo_budzet_forms_dodajPrzychod') }}"><button>Dodaj nowy</button></a>
             </div>
-            <table class="przychody-tabela">
-                <thead>
-                    <tr>
-                        <th>Kategoria</th>
-                        <th>Przychód</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Przychody</th>
-                        <th>{{ przychody_sumy.Suma }} zł</th>
-                    </tr>
-                   {% for nazwa, suma in przychody_sumy if nazwa != 'Suma' %}
+            <div class="tabela-ogol">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategoria</th>
+                            <th>Przychód</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Przychody</th>
+                            <th>{{ przychody_sumy.Suma }} zł</th>
+                        </tr>
+                       {% for nazwa, suma in przychody_sumy if nazwa != 'Suma' %}
                         <tr>
                             <td>{{ nazwa }}</td>
                             <td>{{ suma }} zł</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tabela-szczegoly">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for suma_dzien in przychody_dzien %}
+                            <th>{{ suma_dzien }} zł</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% for i in 1..ileDni %}
+                            <th>{{ i }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for nazwa, przychody_dni in przychody %}
+                        <tr>
+                            {% for dzien, przychod in przychody_dni %}
+                                <td>{{ przychod }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="widget wydatki-ogol">
             <div class="title">
                 <span>Wydatki</span>
                 <a href="{{ path('milo_budzet_forms_dodajWydatek') }}"><button>Dodaj nowy</button></a>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Kategoria</th>
-                        <th>Wydatki</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for kategoria, grupy in wydatki_sumy %}
-                    <tr>
-                        <th>{{ kategoria }}</th>
-                        <th>{{ grupy.Suma }} zł</th>
-                    </tr>
-                        {% for nazwa, suma in grupy if nazwa != 'Suma' %}
+            <div class="tabela-ogol">
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ nazwa }}</td>
-                            <td>{{ suma }} zł</td>
+                            <th>Kategoria</th>
+                            <th>Wydatki</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        {% for kategoria, grupy in wydatki_sumy %}
+                        <tr>
+                            <th>{{ kategoria }}</th>
+                            <th>{{ grupy.Suma }} zł</th>
+                        </tr>
+                            {% for nazwa, suma in grupy if nazwa != 'Suma' %}
+                            <tr>
+                                <td>{{ nazwa }}</td>
+                                <td>{{ suma }} zł</td>
+                            </tr>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tabela-szczegoly">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for suma_dzien in wydatki_dzien %}
+                            <th>{{ suma_dzien }} zł</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for kategoria, grupy in wydatki %}
+                        <tr>
+                            {% for i in 1..ileDni %}
+                            <th>{{ i }}</th>
+                            {% endfor %}
+                        </tr>
+                            {% for nazwa, wydatki_dni in grupy %}
+                            <tr>
+                                {% for dzien, wydatek in wydatki_dni %}
+                                    <td>{{ wydatek }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

@@ -27,12 +27,19 @@ class BudzetController extends Controller {
         
         $tabelaSumWydatkow = $this->wyswietlSumeWydatkowAction($okres);
         $tabelaSumPrzychodow = $this->wyswietlSumePrzychodowAction($okres);
+        $tabelaWydatkow = $this->wyswietlWydatkiAction($okres);
+        $tabelaPrzychodow = $this->wyswietlPrzychodyAction($okres);
 
         return array(
             'data' => $tabelaSumWydatkow['data'],
             'wydatki_sumy' => $tabelaSumWydatkow['wydatki_sumy'],
             'sumaWydatkow' => $tabelaSumWydatkow['sumaWydatkow'],
-            'przychody_sumy' => $tabelaSumPrzychodow['przychody_sumy']
+            'przychody_sumy' => $tabelaSumPrzychodow['przychody_sumy'],
+            'wydatki' => $tabelaWydatkow['wydatki'],
+            'wydatki_dzien' => $tabelaWydatkow['wydatki_dzien'],
+            'ileDni' => $tabelaWydatkow['ileDni'],
+            'przychody' => $tabelaPrzychodow['przychody'],
+            'przychody_dzien' => $tabelaPrzychodow['przychody_dzien'],
         );
     }
         
@@ -76,14 +83,23 @@ class BudzetController extends Controller {
         
         $data = new \DateTime($okres);        
         $kategorie = $repoKat->findAllkategorie();
+        $rok = $data->format('Y');
+        $mies = $data->format('m');
+        $ileDni = cal_days_in_month(CAL_GREGORIAN, $mies, $rok);
         
         foreach($kategorie as $k => $category){
             $typy = $repoTyp->findByDodajKategorie($category['id']);
             foreach($typy as $t => $type) {
-                $wydatki[$category['kategoria']][] = $type['grupa'];
-                $kwoty = $repoKwota->findBydodajTypy($type['id'], $data);
-                foreach($kwoty as $k => $amount){
-                    $wydatki[$category['kategoria']][$type['grupa']][] = $amount['kwota'];
+                for($i = 1; $i <= $ileDni; $i++) {
+                    $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
+                    $kwota = $repoKwota->findBydodajTypyByData($type['id'], $dzien);
+                    $suma_dzien = $repoKwota->findByData($dzien);
+                    $wydatki[$category['kategoria']][$type['grupa']][$i] = $kwota[0][1];
+                    if(!is_null($suma_dzien[0][1])) {
+                        $wydatki_dzien[$i] = $suma_dzien[0][1];
+                    } else {
+                        $wydatki_dzien[$i] = '0.00';
+                    }
                 }
             }
         }
@@ -91,6 +107,8 @@ class BudzetController extends Controller {
         return array(
             'data' => $data,
             'wydatki' => $wydatki,
+            'wydatki_dzien' => $wydatki_dzien,
+            'ileDni' => $ileDni
         );
     }
     
@@ -127,18 +145,29 @@ class BudzetController extends Controller {
         
         $data = new \DateTime($okres);        
         $typy = $repoTyp->findAlltypPrzychodu();
+        $rok = $data->format('Y');
+        $mies = $data->format('m');
+        $ileDni = cal_days_in_month(CAL_GREGORIAN, $mies, $rok);
         
         foreach($typy as $t => $type){
-            $kwoty = $repoKwota->findBydodajTypy($type['id'], $data);
-            foreach($kwoty as $k => $amount){
-                $przychody[$type['grupa']][] = $amount['kwota'];
+            for($i = 1; $i <= $ileDni; $i++){
+                $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
+                $kwota = $repoKwota->findBydodajTypyByData($type['id'], $dzien);
+                $suma_dzien = $repoKwota->findByData($dzien);
+                $przychody[$type['grupa']][$i] = $kwota[0][1];
+                if(!is_null($suma_dzien[0][1])) {
+                    $przychody_dzien[$i] = $suma_dzien[0][1];
+                } else {
+                    $przychody_dzien[$i] = '0.00';
+                }
             }
         }
-        
                 
         return array(
             'data' => $data,
-            'przychody' => $przychody
+            'przychody' => $przychody,
+            'przychody_dzien' => $przychody_dzien,
+            'ileDni' => $ileDni
         );
     }
     

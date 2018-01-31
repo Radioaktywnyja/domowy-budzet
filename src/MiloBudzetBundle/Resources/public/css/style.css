@@ -18,12 +18,32 @@ body {
 }
 
 table, thead {
-    border: 2px solid #000000;
+    border: 1px solid #000000;
     border-collapse: collapse;
 }
 
 th, td {
     border: 1px solid #000000;
     text-align: left;
+    height: 14px;
+}
+
+.tabela-ogol {
+    display: inline-block;
+    float: left;
+}
+
+.tabela-szczegoly {
+    width: 1090px;
+    overflow: scroll;
+}
+
+.tabela-szczegoly table {
+    margin-left: 5px;
+    width: 1500px;
+}
+
+.tabela-szczegoly th, .szczegoly td {
+    text-align: center;
 }
 
