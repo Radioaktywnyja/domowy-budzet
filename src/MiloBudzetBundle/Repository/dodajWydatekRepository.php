@@ -6,44 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class dodajWydatekRepository extends EntityRepository {
     
-    public function findBydodajTypyByData($typ, $data) {
-        
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT SUM(dW.kwota)
-            FROM MiloBudzetBundle:dodajWydatek dW
-            JOIN dW.dodajTypy a
-            WHERE dW.dodajTypy = :typ AND dW.data = :data'
-        );
-        $query->setParameters(array(
-            'typ' => $typ,
-            'data' => $data
-        ));
-        
-        $result = $query->getResult();
-        
-        return $result;
-        
-    }
-    
-    public function findByData($data) {
-        
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT SUM(dW.kwota)
-            FROM MiloBudzetBundle:dodajWydatek dW
-            JOIN dW.dodajTypy a
-            WHERE dW.data = :data'
-        );
-        $query->setParameters(array(
-            'data' => $data
-        ));
-        
-        $result = $query->getResult();
-        
-        return $result;
-        
-    }
-    
-    public function findBydodajTypyAndSum($typ, $data) {
+    public function findBydodajTypyAndData($typ, $data) {
         
         $month = $data->format('F');
         $year = $data->format('Y');
@@ -51,7 +14,7 @@ class dodajWydatekRepository extends EntityRepository {
         $toDate = new \DateTime('last day of '.$month.' '.$year);
         
         $query = $this->getEntityManager()->createQuery(
-            'SELECT SUM(dW.kwota)
+            'SELECT dW.kwota, dW.data
             FROM MiloBudzetBundle:dodajWydatek dW
             JOIN dW.dodajTypy a
             WHERE dW.dodajTypy = :typ AND dW.data BETWEEN :fromDate AND :toDate'

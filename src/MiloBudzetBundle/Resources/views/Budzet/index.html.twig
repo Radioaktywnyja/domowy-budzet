@@ -13,11 +13,11 @@
         </div>
         <div class="widget miesiac-suma">
             <div class="title">
-                <span>Miesiąc: {{ data|date('m/Y') }}</span>
+                <span>Miesiąc: {{ tabelaWydatkow.data|date('m/Y') }}</span>
                 <a href="{{ path('milo_budzet_forms_zmienMiesiac') }}"><button>Zmień</button></a>
             </div>
-            <h4>Przychody: {{ przychody_sumy.Suma }} zł</h4>
-            <h4>Wydatki: {{ sumaWydatkow }} zł</h4>
+            <h4>Przychody: {{ tabelaSumPrzychodow.przychody_sumy.Suma|number_format(2, ',', ' ') }} zł</h4>
+            <h4>Wydatki: {{ tabelaSumWydatkow.sumaWydatkow|number_format(2, ',', ' ') }} zł</h4>
         </div>
         <div class="widget przychody-ogol">
             <div class="title">
@@ -35,12 +35,12 @@
                     <tbody>
                         <tr>
                             <th>Przychody</th>
-                            <th>{{ przychody_sumy.Suma }} zł</th>
+                            <th>{{ tabelaSumPrzychodow.przychody_sumy.Suma|number_format(2, ',', ' ') }} zł</th>
                         </tr>
-                       {% for nazwa, suma in przychody_sumy if nazwa != 'Suma' %}
+                       {% for nazwa, suma in tabelaSumPrzychodow.przychody_sumy if nazwa != 'Suma' %}
                         <tr>
                             <td>{{ nazwa }}</td>
-                            <td>{{ suma }} zł</td>
+                            <td>{{ suma|number_format(2, ',', ' ') }} zł</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -50,21 +50,21 @@
                 <table>
                     <thead>
                         <tr>
-                            {% for suma_dzien in przychody_dzien %}
-                            <th>{{ suma_dzien }} zł</th>
+                            {% for suma_dzien in tabelaPrzychodow.przychody_dzien %}
+                            <th>{{ suma_dzien|number_format(2, ',', ' ') }} zł</th>
                             {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            {% for i in 1..ileDni %}
+                            {% for i in 1..tabelaWydatkow.ileDni %}
                             <th>{{ i }}</th>
                             {% endfor %}
                         </tr>
-                        {% for nazwa, przychody_dni in przychody %}
+                        {% for nazwa, przychody_dni in tabelaPrzychodow.przychody %}
                         <tr>
                             {% for dzien, przychod in przychody_dni %}
-                                <td>{{ przychod }}</td>
+                                <td>{{ przychod is not null ? przychod|number_format(2, ',', ' ') : ' ' }}</td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
@@ -86,15 +86,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for kategoria, grupy in wydatki_sumy %}
+                        {% for kategoria, grupy in tabelaSumWydatkow.wydatki_sumy %}
                         <tr>
                             <th>{{ kategoria }}</th>
-                            <th>{{ grupy.Suma }} zł</th>
+                            <th>{{ grupy.Suma|number_format(2, ',', ' ') }} zł</th>
                         </tr>
                             {% for nazwa, suma in grupy if nazwa != 'Suma' %}
                             <tr>
                                 <td>{{ nazwa }}</td>
-                                <td>{{ suma }} zł</td>
+                                <td>{{ suma|number_format(2, ',', ' ') }} zł</td>
                             </tr>
                             {% endfor %}
                         {% endfor %}
@@ -105,22 +105,22 @@
                 <table>
                     <thead>
                         <tr>
-                            {% for suma_dzien in wydatki_dzien %}
-                            <th>{{ suma_dzien }} zł</th>
+                            {% for suma_dzien in tabelaWydatkow.wydatki_dzien %}
+                            <th>{{ suma_dzien|number_format(2, ',', ' ') }} zł</th>
                             {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
-                        {% for kategoria, grupy in wydatki %}
+                        {% for kategoria, grupy in tabelaWydatkow.wydatki %}
                         <tr>
-                            {% for i in 1..ileDni %}
+                            {% for i in 1..tabelaWydatkow.ileDni %}
                             <th>{{ i }}</th>
                             {% endfor %}
                         </tr>
                             {% for nazwa, wydatki_dni in grupy %}
                             <tr>
                                 {% for dzien, wydatek in wydatki_dni %}
-                                    <td>{{ wydatek }}</td>
+                                    <td>{{ wydatek is not null ? wydatek|number_format(2, ',', ' ') : ' ' }}</td>
                                 {% endfor %}
                             </tr>
                             {% endfor %}

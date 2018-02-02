@@ -25,57 +25,22 @@ class BudzetController extends Controller {
      */
     public function indexAction($okres) {
         
-        $tabelaSumWydatkow = $this->wyswietlSumeWydatkowAction($okres);
-        $tabelaSumPrzychodow = $this->wyswietlSumePrzychodowAction($okres);
         $tabelaWydatkow = $this->wyswietlWydatkiAction($okres);
         $tabelaPrzychodow = $this->wyswietlPrzychodyAction($okres);
+        $tabelaSumWydatkow = $this->wyswietlSumeWydatkowAction($tabelaWydatkow['wydatki']);
+        $tabelaSumPrzychodow = $this->wyswietlSumePrzychodowAction($tabelaPrzychodow['przychody']);
 
         return array(
-            'data' => $tabelaSumWydatkow['data'],
-            'wydatki_sumy' => $tabelaSumWydatkow['wydatki_sumy'],
-            'sumaWydatkow' => $tabelaSumWydatkow['sumaWydatkow'],
-            'przychody_sumy' => $tabelaSumPrzychodow['przychody_sumy'],
-            'wydatki' => $tabelaWydatkow['wydatki'],
-            'wydatki_dzien' => $tabelaWydatkow['wydatki_dzien'],
-            'ileDni' => $tabelaWydatkow['ileDni'],
-            'przychody' => $tabelaPrzychodow['przychody'],
-            'przychody_dzien' => $tabelaPrzychodow['przychody_dzien'],
-        );
-    }
-        
-        
-    public function wyswietlSumeWydatkowAction($okres) {
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajWydatek');
-        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');
-        $repoKat = $em->getRepository('MiloBudzetBundle:dodajKatWydatku');
-        
-        $data = new \DateTime($okres);        
-        $kategorie = $repoKat->findAllkategorie();
-        $sumaWydatkow = 0;
-        
-        foreach($kategorie as $k => $category){
-            $typy = $repoTyp->findByDodajKategorie($category['id']);
-            foreach($typy as $t => $type) {;
-                $kwoty = $repoKwota->findBydodajTypyAndSum($type['id'], $data);
-                $wydatki_sumy[$category['kategoria']][$type['grupa']] = $kwoty[0][1];
-            }
-            $wydatki_sumy[$category['kategoria']]['Suma'] = sprintf('%0.2f', array_sum($wydatki_sumy[$category['kategoria']]));
-            $sumaWydatkow = $sumaWydatkow + $wydatki_sumy[$category['kategoria']]['Suma'];
-        }
-                
-        return array(
-            'data' => $data,
-            'wydatki_sumy' => $wydatki_sumy,
-            'sumaWydatkow' => sprintf('%0.2f', $sumaWydatkow)
+            'tabelaSumWydatkow' => $tabelaSumWydatkow,
+            'tabelaSumPrzychodow' => $tabelaSumPrzychodow,
+            'tabelaWydatkow' => $tabelaWydatkow,
+            'tabelaPrzychodow' => $tabelaPrzychodow,
         );
     }
     
      public function wyswietlWydatkiAction($okres) {
-        
-        $em = $this->getDoctrine()->getManager();
+         
+         $em = $this->getDoctrine()->getManager();
         
         $repoKwota = $em->getRepository('MiloBudzetBundle:dodajWydatek');
         $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');
@@ -85,54 +50,53 @@ class BudzetController extends Controller {
         $kategorie = $repoKat->findAllkategorie();
         $rok = $data->format('Y');
         $mies = $data->format('m');
-        $ileDni = cal_days_in_month(CAL_GREGORIAN, $mies, $rok);
+        $ileDni = cal_days_in_month(CAL_GREGORIAN, $data->format('m'), $data->format('Y'));
+        
+        for($i = 1; $i <= $ileDni; $i++) {
+            $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
+            $wydatki_dzien[$i] = 0;
+        }
         
         foreach($kategorie as $k => $category){
             $typy = $repoTyp->findByDodajKategorie($category['id']);
             foreach($typy as $t => $type) {
                 for($i = 1; $i <= $ileDni; $i++) {
                     $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
-                    $kwota = $repoKwota->findBydodajTypyByData($type['id'], $dzien);
-                    $suma_dzien = $repoKwota->findByData($dzien);
-                    $wydatki[$category['kategoria']][$type['grupa']][$i] = $kwota[0][1];
-                    if(!is_null($suma_dzien[0][1])) {
-                        $wydatki_dzien[$i] = $suma_dzien[0][1];
-                    } else {
-                        $wydatki_dzien[$i] = '0.00';
-                    }
+                    $wydatki[$category['kategoria']][$type['grupa']][$i] = null;
                 }
+                $kwota = $repoKwota->findBydodajTypyAndData($type['id'], $data);
+                foreach($kwota as $k => $amount){
+                    $wydatki[$category['kategoria']][$type['grupa']][$amount['data']->format('j')] += $amount['kwota'];
+                    $wydatki_dzien[$amount['data']->format('j')] += $amount['kwota'];
+                }
+                
             }
         }
+         
            
         return array(
             'data' => $data,
             'wydatki' => $wydatki,
             'wydatki_dzien' => $wydatki_dzien,
-            'ileDni' => $ileDni
+            'ileDni' => $ileDni,
         );
     }
     
-    public function wyswietlSumePrzychodowAction($okres) {
+    public function wyswietlSumeWydatkowAction($wydatki) {
         
-        $em = $this->getDoctrine()->getManager();
+        $sumaWydatkow = 0;
         
-        $repoKwota = $em->getRepository('MiloBudzetBundle:dodajPrzychod');
-        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypPrzychodu');
-        
-        $data = new \DateTime($okres);        
-        $typy = $repoTyp->findAlltypPrzychodu();
-        $sumaPrzychodow = 0;
-        
-        foreach($typy as $t => $type){
-            $kwoty = $repoKwota->findBydodajTypyAndSum($type['id'], $data);
-            $przychody_sumy[$type['grupa']] = $kwoty[0][1];
+        foreach($wydatki as $k => $category){
+            foreach($category as $t => $type) {
+                $wydatki_sumy[$k][$t] = array_sum($type);
+            }
+            $wydatki_sumy[$k]['Suma'] = array_sum($wydatki_sumy[$k]);
+            $sumaWydatkow += $wydatki_sumy[$k]['Suma'];
         }
-        
-        $przychody_sumy['Suma'] = sprintf('%0.2f', array_sum($przychody_sumy));
                 
         return array(
-            'data' => $data,
-            'przychody_sumy' => $przychody_sumy,
+            'wydatki_sumy' => $wydatki_sumy,
+            'sumaWydatkow' => $sumaWydatkow
         );
     }
     
@@ -149,17 +113,20 @@ class BudzetController extends Controller {
         $mies = $data->format('m');
         $ileDni = cal_days_in_month(CAL_GREGORIAN, $mies, $rok);
         
+        for($i = 1; $i <= $ileDni; $i++) {
+            $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
+            $przychody_dzien[$i] = 0;
+        }
+        
         foreach($typy as $t => $type){
             for($i = 1; $i <= $ileDni; $i++){
                 $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
-                $kwota = $repoKwota->findBydodajTypyByData($type['id'], $dzien);
-                $suma_dzien = $repoKwota->findByData($dzien);
-                $przychody[$type['grupa']][$i] = $kwota[0][1];
-                if(!is_null($suma_dzien[0][1])) {
-                    $przychody_dzien[$i] = $suma_dzien[0][1];
-                } else {
-                    $przychody_dzien[$i] = '0.00';
-                }
+                $przychody[$type['grupa']][$i] = null;
+            }
+            $kwota = $repoKwota->findBydodajTypyAndData($type['id'], $data);
+            foreach($kwota as $k => $amount){
+                $przychody[$type['grupa']][$amount['data']->format('j')] += $amount['kwota'];
+                $przychody_dzien[$amount['data']->format('j')] += $amount['kwota'];
             }
         }
                 
@@ -170,5 +137,19 @@ class BudzetController extends Controller {
             'ileDni' => $ileDni
         );
     }
+    
+    public function wyswietlSumePrzychodowAction($przychody) {
+        
+        foreach($przychody as $t => $type){
+            $przychody_sumy[$t] = array_sum($type);
+        }
+        
+        $przychody_sumy['Suma'] = array_sum($przychody_sumy);
+                
+        return array(
+            'przychody_sumy' => $przychody_sumy,
+        );
+    }
+    
     
 }

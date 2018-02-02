@@ -34,7 +34,7 @@ th, td {
 }
 
 .tabela-szczegoly {
-    width: 1090px;
+    width: auto;
     overflow: scroll;
 }
 
@@ -43,7 +43,7 @@ th, td {
     width: 1500px;
 }
 
-.tabela-szczegoly th, .szczegoly td {
+.tabela-szczegoly th, .tabela-szczegoly td {
     text-align: center;
 }
 
