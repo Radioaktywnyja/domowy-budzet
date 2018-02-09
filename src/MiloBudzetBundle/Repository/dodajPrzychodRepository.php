@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class dodajPrzychodRepository extends EntityRepository {
     
-    public function findBydodajTypyAndData($typ, $data) {
+    public function findBydodajTypy($typ, $data) {
         
         $month = $data->format('F');
         $year = $data->format('Y');
@@ -23,6 +23,27 @@ class dodajPrzychodRepository extends EntityRepository {
             'typ' => $typ,
             'fromDate' => $fromDate,
             'toDate' => $toDate
+        ));
+        
+        $result = $query->getResult();
+        
+        return $result;
+        
+    }
+    
+    public function findBydodajTypyAndData($typ, $data) {
+        
+        $day = $data->format('Y-m-d');
+        
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT dP
+            FROM MiloBudzetBundle:dodajPrzychod dP
+            JOIN dP.dodajTypy a
+            WHERE dP.dodajTypy = :typ AND dP.data = :day'
+        );
+        $query->setParameters(array(
+            'typ' => $typ,
+            'day' => $day
         ));
         
         $result = $query->getResult();

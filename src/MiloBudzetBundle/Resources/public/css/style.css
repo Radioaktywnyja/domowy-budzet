@@ -13,6 +13,8 @@ body {
 }
 
 .title span {
+    display: block;
+    clear: right;
     font-weight: bold;
     font-size: 16px;
 }
@@ -26,6 +28,11 @@ th, td {
     border: 1px solid #000000;
     text-align: left;
     height: 14px;
+}
+
+a:visited, a:active, a:hover, a:link {
+    text-decoration: none;
+    color: #000000;
 }
 
 .tabela-ogol {
@@ -45,5 +52,13 @@ th, td {
 
 .tabela-szczegoly th, .tabela-szczegoly td {
     text-align: center;
+}
+
+.tabela-dzienne {
+    font-size: 14px;
+}
+
+.tabela-dzienne td, .tabela-dzienne th {
+    padding: 5px;
 }
 

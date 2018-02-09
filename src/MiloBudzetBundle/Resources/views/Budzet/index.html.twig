@@ -63,8 +63,12 @@
                         </tr>
                         {% for nazwa, przychody_dni in tabelaPrzychodow.przychody %}
                         <tr>
-                            {% for dzien, przychod in przychody_dni %}
-                                <td>{{ przychod is not null ? przychod|number_format(2, ',', ' ') : ' ' }}</td>
+                            {% for dzien, przychod in przychody_dni if dzien != 'id' %}
+                                <td>
+                                    <a href="{{ path('milo_budzet_pokazDzienne', {'rodzaj': 'Przychod', 'typ': przychody_dni.id, 'okres': tabelaPrzychodow.data|date('Y-m')~'-'~"%02d"|format(dzien)}) }}">
+                                        {{ przychod is not null ? przychod|number_format(2, ',', ' ') : ' ' }}
+                                    </a>
+                                </td>
                             {% endfor %}
                         </tr>
                         {% endfor %}
@@ -119,8 +123,12 @@
                         </tr>
                             {% for nazwa, wydatki_dni in grupy %}
                             <tr>
-                                {% for dzien, wydatek in wydatki_dni %}
-                                    <td>{{ wydatek is not null ? wydatek|number_format(2, ',', ' ') : ' ' }}</td>
+                                {% for dzien, wydatek in wydatki_dni if dzien != 'id' %}
+                                    <td>
+                                        <a href="{{ path('milo_budzet_pokazDzienne', {'rodzaj': 'Wydatek', 'typ': wydatki_dni.id, 'okres': tabelaWydatkow.data|date('Y-m')~'-'~"%02d"|format(dzien)}) }}">
+                                            {{ wydatek is not null ? wydatek|number_format(2, ',', ' ') : ' ' }}
+                                        </a>
+                                    </td>
                                 {% endfor %}
                             </tr>
                             {% endfor %}

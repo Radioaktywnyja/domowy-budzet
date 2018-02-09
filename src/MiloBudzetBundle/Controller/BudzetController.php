@@ -38,6 +38,31 @@ class BudzetController extends Controller {
         );
     }
     
+    /**
+     * @Route(
+     *      "/{rodzaj}-dzienny/{typ}/{okres}",
+     *      name="milo_budzet_pokazDzienne",
+     *      requirements={"rodzaj"="Wydatek|Przychod", "typ"="\d+"}
+     * )
+     * 
+     * @Template
+     */
+    public function pokazDzienneAction($rodzaj, $typ, $okres) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $repo = $em->getRepository('MiloBudzetBundle:dodaj'.$rodzaj);
+        $data = new \DateTime($okres);
+        
+        $dzienne = $repo->findBydodajTypyAndData($typ, $data);
+
+
+        return array(
+            'dzienne' => $dzienne,
+            'rodzaj' => $rodzaj
+        );
+    }
+    
      public function wyswietlWydatkiAction($okres) {
          
          $em = $this->getDoctrine()->getManager();
@@ -60,11 +85,12 @@ class BudzetController extends Controller {
         foreach($kategorie as $k => $category){
             $typy = $repoTyp->findByDodajKategorie($category['id']);
             foreach($typy as $t => $type) {
+                $wydatki[$category['kategoria']][$type['grupa']]['id'] = $type['id'];
                 for($i = 1; $i <= $ileDni; $i++) {
                     $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
                     $wydatki[$category['kategoria']][$type['grupa']][$i] = null;
                 }
-                $kwota = $repoKwota->findBydodajTypyAndData($type['id'], $data);
+                $kwota = $repoKwota->findBydodajTypy($type['id'], $data);
                 foreach($kwota as $k => $amount){
                     $wydatki[$category['kategoria']][$type['grupa']][$amount['data']->format('j')] += $amount['kwota'];
                     $wydatki_dzien[$amount['data']->format('j')] += $amount['kwota'];
@@ -119,11 +145,12 @@ class BudzetController extends Controller {
         }
         
         foreach($typy as $t => $type){
+            $przychody[$type['grupa']]['id'] = $type['id'];
             for($i = 1; $i <= $ileDni; $i++){
                 $dzien = $rok.'-'.$mies.'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
                 $przychody[$type['grupa']][$i] = null;
             }
-            $kwota = $repoKwota->findBydodajTypyAndData($type['id'], $data);
+            $kwota = $repoKwota->findBydodajTypy($type['id'], $data);
             foreach($kwota as $k => $amount){
                 $przychody[$type['grupa']][$amount['data']->format('j')] += $amount['kwota'];
                 $przychody_dzien[$amount['data']->format('j')] += $amount['kwota'];

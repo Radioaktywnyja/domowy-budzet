@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Domowy Budżet - czyli jak nie zbankrutować</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/milobudzet/css/style.css') }}">
+</head>
+<body>
+    <div class="kontener">
+        
+        <div class="logo">
+            <h1>BUDŻET DOMOWY</h1>
+        </div>
+        {% if dzienne is not empty %}
+            <div class="widget dzien-typ">
+                <div class="title">
+                    <span>Rodzaj: {{ rodzaj }}</span>
+                    <span>Typ: {{ dzienne.0.dodajTypy.grupa }}</span>
+                    <span>Dzien: {{ dzienne.0.data|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div>
+                <table class="tabela-dzienne">
+                    <thead>
+                        <tr>
+                            <th>Kwota</th>
+                            <th>Imię</th>
+                            {% if dzienne.0.dodajSklepy is defined %} 
+                                <th>Sklep</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for nazwa in dzienne %}
+                        <tr>
+                            <td>{{ nazwa.kwota }} zł</td>
+                            <td>{{ nazwa.dodajImiona.imie }}</td>
+                            {% if nazwa.dodajSklepy.sklep is defined %} 
+                                <td>{{ nazwa.dodajSklepy.sklep }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="title">
+                <span>Brak wpisów dla tego dnia lub kategorii</span>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

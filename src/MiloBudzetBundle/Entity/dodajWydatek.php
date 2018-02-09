@@ -35,19 +35,19 @@ class dodajWydatek {
     private $kwota;
     
      /**
-     * @ORM\ManyToOne(targetEntity="dodajTypWydatku", inversedBy="typy")
+     * @ORM\ManyToOne(targetEntity="dodajTypWydatku", inversedBy="typy", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajTypy;
     
       /**
-     * @ORM\ManyToOne(targetEntity="dodajImie", inversedBy="imiona")
+     * @ORM\ManyToOne(targetEntity="dodajImie", inversedBy="imiona", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajImiona;
     
       /**
-     * @ORM\ManyToOne(targetEntity="dodajSklep", inversedBy="sklepy")
+     * @ORM\ManyToOne(targetEntity="dodajSklep", inversedBy="sklepy", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $dodajSklepy;
