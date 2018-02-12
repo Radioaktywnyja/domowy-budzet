@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Domowy Budżet - czyli jak nie zbankrutować</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/milobudzet/css/style.css') }}">
+</head>
+<body>
+    <div class="alert">
+        {% for type,messages in app.session.flashbag.all() %}
+            {% for msg in messages %}
+            <div class="alert alert-{{ type }}">{{ msg }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="kontener">      
+        {{ form(form, {'attr': {'novalidate': 'true'}}) }}
+    </div>
+</body>
+</html>

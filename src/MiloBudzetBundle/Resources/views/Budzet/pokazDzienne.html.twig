@@ -17,7 +17,7 @@
                     <span>Rodzaj: {{ rodzaj }}</span>
                     <span>Typ: {{ dzienne.0.dodajTypy.grupa }}</span>
                     <span>Dzien: {{ dzienne.0.data|date('d/m/Y') }}</span>
-                </div>
+                    <a href="{{ path('milo_budzet_forms_dodaj'~rodzaj) }}"><button>Dodaj nowy</button></a>
             </div>
             <div>
                 <table class="tabela-dzienne">
@@ -28,6 +28,7 @@
                             {% if dzienne.0.dodajSklepy is defined %} 
                                 <th>Sklep</th>
                             {% endif %}
+                            <th>Akcje</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,10 @@
                             {% if nazwa.dodajSklepy.sklep is defined %} 
                                 <td>{{ nazwa.dodajSklepy.sklep }}</td>
                             {% endif %}
+                            <td>
+                                <a href="{{ path('milo_budzet_forms_aktualizuj', {'rodzaj': rodzaj, 'id': nazwa.id}) }}"><button>Zmień</button></a>
+                                <a href="{{ path('milo_budzet_forms_usun', {'rodzaj': rodzaj, 'id': nazwa.id}) }}"><button>Usuń</button></a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -46,6 +51,7 @@
         {% else %}
             <div class="title">
                 <span>Brak wpisów dla tego dnia lub kategorii</span>
+                <a href="{{ path('milo_budzet_forms_dodaj'~rodzaj) }}"><button>Dodaj nowy</button></a>
             </div>
         {% endif %}
     </div>

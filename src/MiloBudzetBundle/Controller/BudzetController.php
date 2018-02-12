@@ -31,10 +31,10 @@ class BudzetController extends Controller {
         $tabelaSumPrzychodow = $this->wyswietlSumePrzychodowAction($tabelaPrzychodow['przychody']);
 
         return array(
-            'tabelaSumWydatkow' => $tabelaSumWydatkow,
-            'tabelaSumPrzychodow' => $tabelaSumPrzychodow,
             'tabelaWydatkow' => $tabelaWydatkow,
             'tabelaPrzychodow' => $tabelaPrzychodow,
+            'tabelaSumWydatkow' => $tabelaSumWydatkow,
+            'tabelaSumPrzychodow' => $tabelaSumPrzychodow,
         );
     }
     
@@ -63,7 +63,7 @@ class BudzetController extends Controller {
         );
     }
     
-     public function wyswietlWydatkiAction($okres) {
+    public function wyswietlWydatkiAction($okres) {
          
          $em = $this->getDoctrine()->getManager();
         
@@ -114,7 +114,7 @@ class BudzetController extends Controller {
         
         foreach($wydatki as $k => $category){
             foreach($category as $t => $type) {
-                $wydatki_sumy[$k][$t] = array_sum($type);
+                $wydatki_sumy[$k][$t] = array_sum(array_slice($type, 1));
             }
             $wydatki_sumy[$k]['Suma'] = array_sum($wydatki_sumy[$k]);
             $sumaWydatkow += $wydatki_sumy[$k]['Suma'];
@@ -168,7 +168,7 @@ class BudzetController extends Controller {
     public function wyswietlSumePrzychodowAction($przychody) {
         
         foreach($przychody as $t => $type){
-            $przychody_sumy[$t] = array_sum($type);
+            $przychody_sumy[$t] = array_sum(array_slice($type, 1));
         }
         
         $przychody_sumy['Suma'] = array_sum($przychody_sumy);

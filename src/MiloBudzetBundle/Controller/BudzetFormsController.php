@@ -331,4 +331,81 @@ class BudzetFormsController extends Controller {
         );
     }
     
+    /**
+     * @Route(
+     *      "/aktualizuj/{rodzaj}/{id}",
+     *      name="milo_budzet_forms_aktualizuj",
+     *      requirements={"rodzaj"="Wydatek|Przychod"}
+     * )
+     * 
+     * @Template
+     */
+    public function aktualizujAction(Request $Request, $rodzaj, $id) {
+        
+        $repo = $this->getDoctrine()->getRepository('MiloBudzetBundle:dodaj'.$rodzaj);
+        $rekord = $repo->find($id);
+        
+        if($rodzaj == 'Wydatek') {
+            $form = $this->createForm(Type\dodajWydatekType::class, $rekord);
+        } else {
+            $form = $this->createForm(Type\dodajPrzychodType::class, $rekord);
+        }
+        
+        if($Request->isMethod('POST')) {
+            
+            $form->handleRequest($Request);
+            $Session = $this->get('session');
+            
+            if($form->isSubmitted() && $form->isValid()) {
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($rekord);
+                $em->flush();
+                
+                $Session->getFlashBag()->add('success', "Wpis został zaktualizowany");
+                
+                return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
+                    'rodzaj' => $rodzaj,
+                    'typ' => $rekord->getDodajTypy()->getId(),
+                    'okres' => $rekord->getData()->format('Y-m-d')
+                )));
+                
+                
+            } else {
+                $Session->getFlashBag()->add('danger', 'Popraw dane formularza');
+            }
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+        
+    }
+    
+    /**
+     * @Route(
+     *      "/usun/{rodzaj}/{id}",
+     *      name="milo_budzet_forms_usun",
+     *      requirements={"rodzaj"="Wydatek|Przychod"}
+     * )
+     */
+    public function usunAction($rodzaj, $id) {
+        
+        $repo = $this->getDoctrine()->getRepository('MiloBudzetBundle:dodaj'.$rodzaj);
+        $rekord = $repo->find($id);
+                
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($rekord);
+        $em->flush();
+
+        $this->get('session')->getFlashBag()->add('success', "Wpis został usunięty");
+
+        return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
+            'rodzaj' => $rodzaj,
+            'typ' => $rekord->getDodajTypy()->getId(),
+            'okres' => $rekord->getData()->format('Y-m-d')
+        )));
+        
+    }
+    
 }
