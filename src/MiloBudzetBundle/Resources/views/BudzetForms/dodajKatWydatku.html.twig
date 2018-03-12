@@ -13,8 +13,43 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <div class="kontener">      
+    <div class="logo">
+        <h1>BUDŻET DOMOWY</h1>
+    </div>
+    {% if kategorie is not empty %}
+        <h2>Rodzaj: Kategorie Wydatków</h2>
+        <div>
+            <table class="tabela-dzienne">
+                <thead>
+                    <tr>
+                        <th>Kategoria wydatków</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for nazwa in kategorie %}
+                    <tr>
+                        <td>{{ nazwa.kategoria }}</td>
+                        <td>
+                            <a href="{{ path('milo_budzet_forms_aktualizuj', {'rodzaj': 'KatWydatku', 'id': nazwa.id}) }}"><button>Zmień</button></a>
+                            <a href="{{ path('milo_budzet_forms_usun', {'rodzaj': 'KatWydatku', 'id': nazwa.id}) }}"><button>Usuń</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="title">
+            <span>Brak wpisów</span>
+        </div>
+    {% endif %}
+    <div class="kontener">
+        <h2>Dodaj nowy:</h2>
         {{ form(form) }}
+    </div>
+    <div class="powrot">
+        <a href="{{ path('milo_budzet_forms_dodajTypWydatku') }}"><button>Wróć</button></a>
     </div>
 </body>
 </html>

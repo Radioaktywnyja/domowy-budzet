@@ -13,8 +13,49 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <div class="kontener">      
+    <div class="logo">
+        <h1>BUDŻET DOMOWY</h1>
+    </div>
+    {% if typy is not empty %}
+        <h2>Rodzaj: Typy Wydatków</h2>
+        <div>
+            <table class="tabela-dzienne">
+                <thead>
+                    <tr>
+                        <th>Typ wydatku</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for kategoria, types in typy %}
+                        <tr>
+                            <th colspan="2">{{ kategoria }}</th>
+                        </tr>
+                        {% for typ, id in types %}
+                        <tr>
+                            <td>{{ typ }}</td>
+                            <td>
+                                <a href="{{ path('milo_budzet_forms_aktualizuj', {'rodzaj': 'TypWydatku', 'id': id}) }}"><button>Zmień</button></a>
+                                <a href="{{ path('milo_budzet_forms_usun', {'rodzaj': 'TypWydatku', 'id': id}) }}"><button>Usuń</button></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="title">
+            <span>Brak wpisów</span>
+        </div>
+    {% endif %}
+    <div class="kontener">
+        <h2>Dodaj nowy:</h2>
         {{ form(form) }}
+    </div>
+    <div class="powrot">
+        <a href="{{ path('milo_budzet_forms_dodajKatWydatku') }}"><button>Dodaj/Usuń Kategorię</button></a>
+        <a href="{{ path('milo_budzet_index') }}"><button>Wróć do strony głównej</button></a>
     </div>
 </body>
 </html>

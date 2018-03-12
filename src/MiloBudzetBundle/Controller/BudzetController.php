@@ -65,7 +65,7 @@ class BudzetController extends Controller {
     
     public function wyswietlWydatkiAction($okres) {
          
-         $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         
         $repoKwota = $em->getRepository('MiloBudzetBundle:dodajWydatek');
         $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');

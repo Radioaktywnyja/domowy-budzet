@@ -13,8 +13,43 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <div class="kontener">      
+    <div class="logo">
+        <h1>BUDŻET DOMOWY</h1>
+    </div>
+    {% if sklepy is not empty %}
+        <h2>Rodzaj: Sklepy</h2>
+        <div>
+            <table class="tabela-dzienne">
+                <thead>
+                    <tr>
+                        <th>Sklep</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for nazwa in sklepy %}
+                    <tr>
+                        <td>{{ nazwa.sklep }}</td>
+                        <td>
+                            <a href="{{ path('milo_budzet_forms_aktualizuj', {'rodzaj': 'Sklep', 'id': nazwa.id}) }}"><button>Zmień</button></a>
+                            <a href="{{ path('milo_budzet_forms_usun', {'rodzaj': 'Sklep', 'id': nazwa.id}) }}"><button>Usuń</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="title">
+            <span>Brak wpisów</span>
+        </div>
+    {% endif %}
+    <div class="kontener">
+        <h2>Dodaj nowy sklep:</h2>
         {{ form(form) }}
+    </div>
+    <div class="powrot">
+        <a href="{{ path('milo_budzet_index') }}"><button>Wróć do strony głównej</button></a>
     </div>
 </body>
 </html>

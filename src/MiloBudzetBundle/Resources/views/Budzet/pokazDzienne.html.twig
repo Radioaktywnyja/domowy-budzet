@@ -18,6 +18,7 @@
                     <span>Typ: {{ dzienne.0.dodajTypy.grupa }}</span>
                     <span>Dzien: {{ dzienne.0.data|date('d/m/Y') }}</span>
                     <a href="{{ path('milo_budzet_forms_dodaj'~rodzaj) }}"><button>Dodaj nowy</button></a>
+                </div>
             </div>
             <div>
                 <table class="tabela-dzienne">
@@ -54,6 +55,9 @@
                 <a href="{{ path('milo_budzet_forms_dodaj'~rodzaj) }}"><button>Dodaj nowy</button></a>
             </div>
         {% endif %}
+        <div class="powrot">
+            <a href="{{ path('milo_budzet_index') }}"><button>Wróć do strony głównej</button></a>
+        </div>
     </div>
 </body>
 </html>

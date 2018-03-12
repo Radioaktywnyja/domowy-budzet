@@ -65,6 +65,20 @@ class BudzetFormsController extends Controller {
      */
     public function dodajTypWydatkuAction(Request $Request) {
         
+        $em = $this->getDoctrine()->getManager();
+        
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypWydatku');
+        $repoKat = $em->getRepository('MiloBudzetBundle:dodajKatWydatku');
+        
+        $kategorie = $repoKat->findAllkategorie();
+        
+        foreach($kategorie as $k => $category){
+            $types = $repoTyp->findByDodajKategorie($category['id']);
+            foreach($types as $t => $type) {
+                $typy[$category['kategoria']][$type['grupa']] = $type['id'];
+            }
+        }
+        
         $dodajTypWydatku = new Entity\dodajTypWydatku();
         
         $form = $this->createForm(Type\dodajTypWydatkuType::class, $dodajTypWydatku);
@@ -91,6 +105,7 @@ class BudzetFormsController extends Controller {
         
         return array(
             'form' => $form->createView(),
+            'typy' => $typy
         );
     }
     
@@ -104,6 +119,12 @@ class BudzetFormsController extends Controller {
      * @Template
      */
     public function dodajKatWydatkuAction(Request $Request) {
+        
+        $query = $this->getDoctrine()->getManager()->createQuery(
+                'SELECT dK.kategoria, dK.id
+                FROM MiloBudzetBundle:dodajKatWydatku dK'
+                );
+        $kategorie = $query->getResult();
         
         $dodajKatWydatku = new Entity\dodajKatWydatku();
         
@@ -130,7 +151,8 @@ class BudzetFormsController extends Controller {
         }
         
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'kategorie' => $kategorie
         );
         
     }
@@ -144,6 +166,12 @@ class BudzetFormsController extends Controller {
      * @Template
      */
     public function dodajImieAction(Request $Request) {
+        
+        $query = $this->getDoctrine()->getManager()->createQuery(
+                'SELECT dI.imie, dI.id
+                FROM MiloBudzetBundle:dodajImie dI'
+                );
+        $imiona = $query->getResult();
         
         $dodajImie = new Entity\dodajImie();
         
@@ -170,7 +198,8 @@ class BudzetFormsController extends Controller {
         }
         
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'imiona' => $imiona
         );
         
     }
@@ -184,6 +213,12 @@ class BudzetFormsController extends Controller {
      * @Template
      */
     public function dodajSklepAction(Request $Request) {
+        
+        $query = $this->getDoctrine()->getManager()->createQuery(
+                'SELECT dS.sklep, dS.id
+                FROM MiloBudzetBundle:dodajSklep dS'
+                );
+        $sklepy = $query->getResult();
         
         $dodajSklep = new Entity\dodajSklep();
         
@@ -210,7 +245,8 @@ class BudzetFormsController extends Controller {
         }
         
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'sklepy' => $sklepy
         );
         
     }
@@ -265,6 +301,10 @@ class BudzetFormsController extends Controller {
      */
     public function dodajTypPrzychoduAction(Request $Request) {
         
+        $em = $this->getDoctrine()->getManager();
+        $repoTyp = $em->getRepository('MiloBudzetBundle:dodajTypPrzychodu');
+        $typy = $repoTyp->findAlltypPrzychodu();
+        
         $dodajTypPrzychodu = new Entity\dodajTypPrzychodu();
         
         $form = $this->createForm(Type\dodajTypPrzychoduType::class, $dodajTypPrzychodu);
@@ -291,6 +331,7 @@ class BudzetFormsController extends Controller {
         
         return array(
             'form' => $form->createView(),
+            'typy' => $typy
         );
     }
     
@@ -335,7 +376,7 @@ class BudzetFormsController extends Controller {
      * @Route(
      *      "/aktualizuj/{rodzaj}/{id}",
      *      name="milo_budzet_forms_aktualizuj",
-     *      requirements={"rodzaj"="Wydatek|Przychod"}
+     *      requirements={"rodzaj"="Wydatek|Przychod|TypPrzychodu|TypWydatku|KatWydatku|Imie|Sklep"}
      * )
      * 
      * @Template
@@ -345,12 +386,8 @@ class BudzetFormsController extends Controller {
         $repo = $this->getDoctrine()->getRepository('MiloBudzetBundle:dodaj'.$rodzaj);
         $rekord = $repo->find($id);
         
-        if($rodzaj == 'Wydatek') {
-            $form = $this->createForm(Type\dodajWydatekType::class, $rekord);
-        } else {
-            $form = $this->createForm(Type\dodajPrzychodType::class, $rekord);
-        }
-        
+        $form = $this->createForm("MiloBudzetBundle\Form\Type\dodaj".$rodzaj."Type", $rekord);
+
         if($Request->isMethod('POST')) {
             
             $form->handleRequest($Request);
@@ -364,11 +401,15 @@ class BudzetFormsController extends Controller {
                 
                 $Session->getFlashBag()->add('success', "Wpis został zaktualizowany");
                 
-                return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
-                    'rodzaj' => $rodzaj,
-                    'typ' => $rekord->getDodajTypy()->getId(),
-                    'okres' => $rekord->getData()->format('Y-m-d')
-                )));
+                if($rodzaj == 'Wydatek' || $rodzaj == 'Przychod') {
+                    return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
+                        'rodzaj' => $rodzaj,
+                        'typ' => $rekord->getDodajTypy()->getId(),
+                        'okres' => $rekord->getData()->format('Y-m-d')
+                    )));
+                } else {
+                    return $this->redirect($this->generateUrl('milo_budzet_forms_dodaj'.$rodzaj));
+                }
                 
                 
             } else {
@@ -386,7 +427,7 @@ class BudzetFormsController extends Controller {
      * @Route(
      *      "/usun/{rodzaj}/{id}",
      *      name="milo_budzet_forms_usun",
-     *      requirements={"rodzaj"="Wydatek|Przychod"}
+     *      requirements={"rodzaj"="Wydatek|Przychod|TypPrzychodu|TypWydatku|KatWydatku|Imie|Sklep"}
      * )
      */
     public function usunAction($rodzaj, $id) {
@@ -399,12 +440,16 @@ class BudzetFormsController extends Controller {
         $em->flush();
 
         $this->get('session')->getFlashBag()->add('success', "Wpis został usunięty");
-
-        return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
-            'rodzaj' => $rodzaj,
-            'typ' => $rekord->getDodajTypy()->getId(),
-            'okres' => $rekord->getData()->format('Y-m-d')
-        )));
+        
+        if($rodzaj == 'Wydatek' || $rodzaj == 'Przychod') {
+            return $this->redirect($this->generateUrl('milo_budzet_pokazDzienne', array(
+                'rodzaj' => $rodzaj,
+                'typ' => $rekord->getDodajTypy()->getId(),
+                'okres' => $rekord->getData()->format('Y-m-d')
+            )));
+        } else {
+            return $this->redirect($this->generateUrl('milo_budzet_forms_dodaj'.$rodzaj));
+        }
         
     }
     
